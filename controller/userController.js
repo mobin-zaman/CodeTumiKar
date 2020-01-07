@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Code = require('../models/code');
 
 /**
  * it takes username as argument
@@ -25,11 +26,36 @@ function checkUserExists(username) {
     });
 }
 
+function checkFileNameExists(username, filename) {
+    return new Promise(((resolve, reject) => {
+        checkUserExists(username)
+            .then(user => {
+                Code.findOne({
+                    where: {
+                        userId: user.id,
+                        fileName: filename
+                    }
+                }).then(code => {
+                    if (code !== null) {
+                        resolve(true);
+                    } else {
+                        reject(false);
+                    }
+                }).catch(err => {
+                    reject(err);
+                })
+            })
+            .catch(err => {
+                reject(new Error('user doesnt exist'));
+            })
+    }));
+}
+
 /**
  *
  * @param username => to check the if the user exists
  * @param password => to check the password with the user
- * @returns .then=> true, .catch=> error object
+ * @returns .then=> user, .catch=> error object
  */
 
 function checkPassword(username, password) {
@@ -37,7 +63,7 @@ function checkPassword(username, password) {
         checkUserExists(username)
             .then(user => {
                 if (user.password === password) {
-                    resolve(true);
+                    resolve(user);
                 } else {
                     reject(new Error('password error'));
                 }
@@ -77,6 +103,55 @@ function createUser(username, password) {
     });
 }
 
-module.exports.checkUserExists = checkUserExists;
-module.exports.checkPassword = checkPassword;
+const DOMAIN_NAME = "http://localhost/api/"
+
+function createPost(username, password, filename, code) {
+    return new Promise(((resolve, reject) => {
+        checkPassword(username, password)
+            .then(userReturned => {
+                var user = userReturned;
+
+                checkFileNameExists(user.username, filename)
+                    .then(result => {
+                        console.log(result);
+                        if (result) {
+                            reject(new Error('filename already exists'));
+                        }
+                    })
+                    .catch(err => {
+                        Code.create({
+                            userId: user.id,
+                            body: code,
+                            fileName: filename
+                        }).then(code => {
+                            resolve(DOMAIN_NAME + user.username + '/' + code.fileName);
+                        }).catch(err => {
+                            reject(err);
+                        })
+                    })
+            })
+            .catch(err => {
+                reject(err);
+            })
+    }));
+
+
+    //     var user = userReturned;
+    //
+    //     Code.create({
+    //         fileName: filename,
+    //         userId: user.id,
+    //         body: code
+    //     }).then(code => {
+    //     }).catch(err => {
+    //         reject(err);
+    //     })
+    // })
+    // .catch(err => {
+    //     reject(err);
+    // })
+    // }));
+}
+
 module.exports.createUser = createUser;
+module.exports.createPost = createPost;

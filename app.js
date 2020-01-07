@@ -9,6 +9,7 @@ const {sequelize} = require('./models/connection');
 const userController = require('./controller/userController');
 const anonymousCodeController = require('./controller/anonymousCodeController');
 const anonymousCodeRoute = require('./routes/anonymousCodeRoute');
+const userRoute = require('./routes/userRoutes');
 
 // view engine setup
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.use('/api', anonymousCodeRoute.router);
+app.use('/api/user', userRoute.router);
 // catch 404 and forward to error handler
 
 // error handler
