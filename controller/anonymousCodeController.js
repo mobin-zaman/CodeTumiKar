@@ -28,7 +28,7 @@ function createUUID() {
 }
 */
 
-const DOMAIN_NAME = 'http://localhost:4001/anonymus-er/';
+const DOMAIN_NAME = 'http://localhost:4000/api/anonymus-er/';
 
 function createAnonymousPost(filename, code) {
     return new Promise((resolve, reject) => {

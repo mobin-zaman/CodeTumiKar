@@ -8,7 +8,7 @@ const app = express();
 const {sequelize} = require('./models/connection');
 const userController = require('./controller/userController');
 const anonymousCodeController = require('./controller/anonymousCodeController');
-
+const anonymousCodeRoute = require('./routes/anonymousCodeRoute');
 
 // view engine setup
 
@@ -16,7 +16,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-
+app.use('/api', anonymousCodeRoute.router);
 // catch 404 and forward to error handler
 
 // error handler
@@ -32,9 +32,10 @@ app.use(function (err, req, res, next) {
 });
 
 sequelize.sync({
-    force: true
+    force: false
 }).then(() => {
     //tests
+    /*
     console.log('test init');
     // userController.checkUserExists('test')
     //     .then(user => {
@@ -82,14 +83,17 @@ sequelize.sync({
 
     console.log('create anonymous post function');
 
+     */
     anonymousCodeController.createAnonymousPost('python.py', 'include <stdio.h>, int main();')
         .then(result => {
             console.log("fucking link: ",result);
-        })
+        });
+
     //test EOF
-    // app.listen(4001, () => {
-    //     console.log('server listening on 4000');
-    // })
+
+    app.listen(4000, () => {
+        console.log('server listening on 4000');
+    })
 
 }).catch(err => {
     console.log('ERROR ==> ', err);
