@@ -2,16 +2,21 @@ const express = require('express');
 const router = express.Router();
 const {createAnonymousPost, retrieveAnonymousPost} = require('../controller/anonymousCodeController');
 
-router.get('/anonymous-er/:uuid', (req, res) => {
+router.get('/ojanar/:uuid', (req, res) => {
     //TODO: is it necessary to check if the uuid is empty or not?
     //nope, it is already handled in the controller
     console.log("GOT HIT");
     retrieveAnonymousPost(req.params.uuid)
         .then(code => {
-            res.status(200).body(code).send();
+            res.send({
+                code:code
+            })
         })
         .catch(err =>{
-            res.status(400).body(err.message).send();
+            res.status(400);
+            res.send({
+                error:err
+            })
         })
 });
 

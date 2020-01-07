@@ -28,7 +28,7 @@ function createUUID() {
 }
 */
 
-const DOMAIN_NAME = 'http://localhost:4000/api/anonymus-er/';
+const DOMAIN_NAME = 'http://localhost:4000/api/ojanar/';
 
 function createAnonymousPost(filename, code) {
     return new Promise((resolve, reject) => {
@@ -65,7 +65,8 @@ function retrieveAnonymousPost(uuid) {
                 uuid: uuid
             }
         }).then(code => {
-            resolve(code);
+            if(code !== null) resolve(code);
+            else reject('the code doesnt exist');
         }).catch(err => {
             reject(new Error('the code doesnt exist'));
         });
