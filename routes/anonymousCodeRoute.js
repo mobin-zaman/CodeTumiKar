@@ -20,4 +20,18 @@ router.get('/ojanar/:uuid', (req, res) => {
         })
 });
 
+router.post('/ojanar', (req,res) =>{
+   createAnonymousPost(req.body.filename, req.body.code)
+       .then(codeUrl =>{
+           res.status(200).send({
+               code_url:codeUrl
+           });
+       })
+       .catch(err =>{
+           res.status(400).send({
+               error:err.message
+           })
+       });
+});
+
 module.exports.router = router;

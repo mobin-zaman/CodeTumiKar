@@ -34,26 +34,28 @@ function createAnonymousPost(filename, code) {
     return new Promise((resolve, reject) => {
         if (code === undefined) {
             reject(new Error('the code body is empty'));
-        }
+        } else {
 
-        AnonymousCode.create({
-            uuid: uuidV1(),
-            fileName: filename,
-            body: code
-        }).then(code => {
-            resolve(DOMAIN_NAME + code.uuid);
-        }).catch(err => {
-            console.log('is it even possible?');
-            anonymousCode.crate({
+            AnonymousCode.create({
                 uuid: uuidV1(),
                 fileName: filename,
                 body: code
             }).then(code => {
                 resolve(DOMAIN_NAME + code.uuid);
+            }).catch(err => {
+                console.log('is it even possible?');
+                AnonymousCode.create({
+                    uuid: uuidV1(),
+                    fileName: filename,
+                    body: code
+                }).then(code => {
+                    resolve(DOMAIN_NAME + code.uuid);
+                })
             })
-        })
+        }
     });
 }
+
 //FIXME: below function needs to be check later on
 function retrieveAnonymousPost(uuid) {
     return new Promise((resolve, reject) => {
@@ -65,7 +67,7 @@ function retrieveAnonymousPost(uuid) {
                 uuid: uuid
             }
         }).then(code => {
-            if(code !== null) resolve(code);
+            if (code !== null) resolve(code);
             else reject('the code doesnt exist');
         }).catch(err => {
             reject(new Error('the code doesnt exist'));
