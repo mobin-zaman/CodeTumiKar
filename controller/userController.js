@@ -53,31 +53,27 @@ function checkPassword(username, password) {
  *
  * @param username
  * @param password
- * @returns returns the user object if the user doesn't exist, else returns 'the username exists
+ * @returns //FIXME: write the doc properly
  */
 function createUser(username, password) {
     return new Promise((resolve, reject) => {
         checkUserExists(username)
             .then(user => {
-                if (!user) {
-                    User.create({
-                        username: username,
-                        password: password
-                    })
-                        .then(user => {
-                            console.log('users auto-genrated id', user.id);
-                            resolve(user);
-                        })
-                        .catch(err => {
-                            reject(err);
-                        })
-                } else {
-                    reject(new Error('the username already exists'));
-                }
+                reject(new Error('the username already exists'));
             })
             .catch(err => {
-                console.log(err.message);
-            })
+                User.create({
+                    username: username,
+                    password: password
+                })
+                    .then(user => {
+                        console.log('users auto-genrated id', user.id);
+                        resolve(user);
+                    })
+                    .catch(err => {
+                        reject(err);
+                    })
+            });
     });
 }
 

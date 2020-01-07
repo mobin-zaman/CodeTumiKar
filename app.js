@@ -1,11 +1,13 @@
 const express = require('express');
 const logger = require('morgan'); //FIXME: remove in deployment
 const app = express();
-const User = require('./models/user');
-const Code = require('./models/code');
+// const User = require('./models/user');
+// const Code = require('./models/code');
+// const anonymousCode= require('./models/anonymousCode');
 
 const {sequelize} = require('./models/connection');
 const userController = require('./controller/userController');
+const anonymousCodeController = require('./controller/anonymousCodeController');
 
 
 // view engine setup
@@ -30,52 +32,59 @@ app.use(function (err, req, res, next) {
 });
 
 sequelize.sync({
-    force: false
+    force: true
 }).then(() => {
     //tests
     console.log('test init');
-    userController.checkUserExists('test')
-        .then(user => {
-            console.log("userid", user.id);
-            console.log('username', user.username);
-        })
-        .catch(err => {
-            console.log('error', err.message);
-        });
-
-    userController.checkPassword('test', 'test')
-        .then(result => {
-            console.log('check password result: ', result);
-        })
-        .catch(err => {
-            console.log(err.message);
-        });
-
-    userController.checkPassword('test','test22')
-        .then(result =>{
-            console.log('should fail');
-        })
-        .catch(err =>{
-            console.log(err.message);
-        });
-
-
-    userController.checkPassword('teeest','test22')
-        .then(result =>{
-            console.log('should fail');
-        })
-        .catch(err =>{
-            console.log(err.message);
-        });    console.log('test close');
+    // userController.checkUserExists('test')
+    //     .then(user => {
+    //         console.log("userid", user.id);
+    //         console.log('username', user.username);
+    //     })
+    //     .catch(err => {
+    //         console.log('error', err.message);
+    //     });
+    //
+    // userController.checkPassword('test', 'test')
+    //     .then(result => {
+    //         console.log('check password result: ', result);
+    //     })
+    //     .catch(err => {
+    //         console.log(err.message);
+    //     });
+    //
+    // userController.checkPassword('test','test22')
+    //     .then(result =>{
+    //         console.log('should fail');
+    //     })
+    //     .catch(err =>{
+    //         console.log(err.message);
+    //     });
+    //
+    //
+    // userController.checkPassword('teeest','test22')
+    //     .then(result =>{
+    //         console.log('should fail');
+    //     })
+    //     .catch(err =>{
+    //         console.log(err.message);
+    //     });    console.log('test close');
 
     console.log('create user function');
 
-    userController.createUser('test3','test3')
+    userController.createUser('anonymous','anonymous')
         .then(user =>{
             console.log('done: ',user.username, user.id, user.password);
         })
         .catch(err =>{
             console.log(err.message);
+        });
+
+    console.log('create anonymous post function');
+
+    anonymousCodeController.createAnonymousPost('python.py', 'include <stdio.h>, int main();')
+        .then(result => {
+            console.log("fucking link: ",result);
         })
     //test EOF
     // app.listen(4001, () => {

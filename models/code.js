@@ -14,10 +14,6 @@ const Code = sequelize.define('code',{
         allowNull: false
     },
 
-    uuid:{
-        type:Sequelize.STRING(30),
-        allowNull: false
-    },
 
     body:{
         type: Sequelize.TEXT,
