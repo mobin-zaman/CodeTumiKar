@@ -103,7 +103,7 @@ function createUser(username, password) {
     });
 }
 
-const DOMAIN_NAME = "http://localhost/api/"
+const DOMAIN_NAME = "http://localhost:4000/api/user/";
 
 function createPost(username, password, filename, code) {
     return new Promise(((resolve, reject) => {
@@ -134,24 +134,50 @@ function createPost(username, password, filename, code) {
                 reject(err);
             })
     }));
-
-
-    //     var user = userReturned;
-    //
-    //     Code.create({
-    //         fileName: filename,
-    //         userId: user.id,
-    //         body: code
-    //     }).then(code => {
-    //     }).catch(err => {
-    //         reject(err);
-    //     })
-    // })
-    // .catch(err => {
-    //     reject(err);
-    // })
-    // }));
 }
+
+function getPost(username, filename) {
+    return new Promise((resolve, reject) => {
+        User.findOne({
+            where: {
+                username: username
+            }
+        }).then(user => {
+            console.log("USER:++++", user);
+            console.log("filename: ",filename);
+            Code.findOne({
+                where: {
+                    userId: user.id,
+                    fileName: filename
+                }
+            }).then(code => {
+                console.log('CODE=====>', code);
+                resolve(code);
+            }).catch(err => {
+                reject(err);
+            });
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+//     var user = userReturned;
+//
+//     Code.create({
+//         fileName: filename,
+//         userId: user.id,
+//         body: code
+//     }).then(code => {
+//     }).catch(err => {
+//         reject(err);
+//     })
+// })
+// .catch(err => {
+//     reject(err);
+// })
+// }));
 
 module.exports.createUser = createUser;
 module.exports.createPost = createPost;
+module.exports.getPost = getPost;

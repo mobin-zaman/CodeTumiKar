@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {createUser, createPost} = require('../controller/userController');
+const {createUser, createPost, getPost} = require('../controller/userController');
 
 //potential url: /api/user/post/
 router.post('/post', (req, res) => {
@@ -10,11 +10,25 @@ router.post('/post', (req, res) => {
                 code_url: codeUrl
             });
         })
-        .catch(err =>{
+        .catch(err => {
             res.status(400).send({
-                error:err.message
+                error: err.message
             });
         });
 });
 
+router.get('/:username/:filename', (req, res) => {
+    getPost(req.params.username, req.params.filename)
+        .then(code => {
+            console.log("CODE:  ---> ", code);
+            return res.status(200).send({
+                code: code
+            });
+        })
+        .catch(err => {
+            return res.status(400).send({
+                error: err.message
+            });
+        });
+});
 module.exports.router = router;

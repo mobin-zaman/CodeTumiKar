@@ -9,29 +9,29 @@ router.get('/ojanar/:uuid', (req, res) => {
     retrieveAnonymousPost(req.params.uuid)
         .then(code => {
             res.send({
-                code:code
+                code: code
             })
         })
-        .catch(err =>{
+        .catch(err => {
             res.status(400);
             res.send({
-                error:err
+                error: err
             })
         })
 });
 
-router.post('/ojanar', (req,res) =>{
-   createAnonymousPost(req.body.filename, req.body.code)
-       .then(codeUrl =>{
-           res.status(200).send({
-               code_url:codeUrl
-           });
-       })
-       .catch(err =>{
-           res.status(400).send({
-               error:err.message
-           })
-       });
+router.post('/ojanar', (req, res) => {
+    createAnonymousPost(req.body.filename, req.body.code)
+        .then(codeUrl => {
+            res.status(200).send({
+                code_url: codeUrl
+            });
+        })
+        .catch(err => {
+            res.status(400).send({
+                error: err.message
+            })
+        });
 });
 
 module.exports.router = router;
