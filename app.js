@@ -86,7 +86,51 @@ sequelize.sync({
     console.log('create anonymous post function');
 
      */
-    anonymousCodeController.createAnonymousPost('python.py', 'include <stdio.h>, int main();')
+    anonymousCodeController.createAnonymousPost('python.py', `
+// console.log('Before');
+// getUser(1, (user) => {
+//     console.log('User', user);
+//     getRepositories(user.gitHubUserName, displayCommits);
+// });
+// console.log('After');
+
+getUser(1)
+    .then(user => {
+        getRepositories(user.gitHubUserName);
+    })
+    .then(repos => console.log(repos))
+    .catch(err => console.log('Error', err.message)); //single error handler for handling the errors of any of the async operation
+
+
+function displayCommits(commits) {
+    console.log(commits);
+}
+
+// Callbacks
+// Promises
+// Async / await
+
+
+function getUser(id) {
+    return new Promise((resolve, reject) => {
+        //kick off some async work
+        setTimeout(() => {
+            console.log('Reading user from a database');
+            resolve({id: id, gitHubUserName: 'mosh'});
+        }, 2000);
+    });
+
+}
+
+function getRepositories(username) {
+    console.log("working");
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log('reading repos from a database');
+            resolve(['repo1', 'repo2', 'repo3']);
+        }, 2000);
+    });
+}`)
         .then(result => {
             console.log("fucking link: ",result);
         });

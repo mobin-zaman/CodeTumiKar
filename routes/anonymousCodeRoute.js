@@ -15,12 +15,13 @@ router.get('/ojanar/:uuid', (req, res) => {
         .catch(err => {
             res.status(400);
             res.send({
-                error: err
+                error: err.message
             })
         })
 });
 
 router.post('/ojanar', (req, res) => {
+    console.log(req.body.filename, req.body.code)
     createAnonymousPost(req.body.filename, req.body.code)
         .then(codeUrl => {
             res.status(200).send({

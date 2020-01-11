@@ -17,6 +17,22 @@ router.post('/post', (req, res) => {
         });
 });
 
+router.post('/user/create', (req, res) => {
+    createUser(req.body.username, req.body.password)
+        .then(user => {
+            res
+                .status(200)
+                .send({
+                    msg: "user created succesfully"
+                });
+        })
+        .catch(err => {
+            res.status(400).send({
+                error: err.message
+            });
+        });
+});
+
 router.get('/:username/:filename', (req, res) => {
     getPost(req.params.username, req.params.filename)
         .then(code => {
